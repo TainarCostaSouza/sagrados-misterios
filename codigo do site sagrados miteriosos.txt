@@ -1,0 +1,135 @@
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+export default function SagradosMisterios() {
+  const [name, setName] = useState("");
+  const [birthData, setBirthData] = useState({ date: "", time: "", place: "" });
+  const [gematriaResult, setGematriaResult] = useState(null);
+  const [gematriaMeaning, setGematriaMeaning] = useState("");
+  const [paid, setPaid] = useState(false);
+
+  const calculateGematria = (word) => {
+    const letters = "abcdefghijklmnopqrstuvwxyz";
+    let total = 0;
+    for (let char of word.toLowerCase()) {
+      const value = letters.indexOf(char) + 1;
+      if (value > 0) total += value;
+    }
+    return total;
+  };
+
+  const interpretGematria = (value) => {
+    const interpretations = {
+      1: "Unidade, liderança, conexão com o Divino.",
+      2: "Dualidade, parceria, equilíbrio.",
+      3: "Comunicação, expressão, criação.",
+      4: "Estabilidade, estrutura, ordem.",
+      5: "Mudança, liberdade, movimento.",
+      6: "Harmonia, amor, família.",
+      7: "Espiritualidade, introspecção, sabedoria.",
+      8: "Poder, realização, abundância.",
+      9: "Compaixão, encerramento de ciclos, altruísmo."
+    };
+    return interpretations[(value % 9) || 9] || "Número místico sem definição conhecida.";
+  };
+
+  const handleGematria = () => {
+    const result = calculateGematria(name);
+    setGematriaResult(result);
+    setGematriaMeaning(interpretGematria(result));
+  };
+
+  const handlePayment = () => {
+    // Aqui você pode integrar com um sistema real de pagamento futuramente
+    setPaid(true);
+  };
+
+  return (
+    <div
+      className="min-h-screen bg-cover bg-center text-white p-6"
+      style={{ backgroundImage: "url('/images/universo-estrelado.jpg')" }}
+    >
+      <div className="bg-black/60 p-4 rounded-xl">
+        <h1 className="text-4xl font-bold text-center mb-4">Sagrados Mistérios</h1>
+
+        {/* Chamada com mistério e curiosidade */}
+        <div className="mb-10 text-center space-y-4">
+          <p className="text-2xl font-semibold text-yellow-300">🌌 Seu Nome Carrega Códigos Sagrados...</p>
+          <p className="text-lg">A Gematria Cabalística revela <span className="text-pink-400">mistérios ocultos</span> da sua alma que influenciam sua <span className="text-green-300">vida financeira</span>, <span className="text-red-300">relacionamentos</span> e <span className="text-indigo-300">caminho espiritual</span>.</p>
+          <p className="italic text-sm">Um antigo segredo da tradição cabalística pode transformar sua percepção de si mesmo.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Mapa Astral Cabalístico */}
+          <Card className="bg-white/10 border-white/20 backdrop-blur-md">
+            <CardContent className="space-y-4 p-6">
+              <h2 className="text-2xl font-semibold">Mapa Astral Cabalístico</h2>
+              <Input
+                placeholder="Data de nascimento (ex: 1975-05-10)"
+                type="date"
+                value={birthData.date}
+                onChange={(e) => setBirthData({ ...birthData, date: e.target.value })}
+              />
+              <Input
+                placeholder="Hora de nascimento"
+                type="time"
+                value={birthData.time}
+                onChange={(e) => setBirthData({ ...birthData, time: e.target.value })}
+              />
+              <Input
+                placeholder="Cidade de nascimento"
+                value={birthData.place}
+                onChange={(e) => setBirthData({ ...birthData, place: e.target.value })}
+              />
+              {!paid ? (
+                <>
+                  <p className="text-sm italic text-yellow-300">
+                    Para visualizar o Mapa Astral completo, é necessário desbloquear a consulta.
+                  </p>
+                  <Button className="w-full bg-yellow-500 hover:bg-yellow-600" onClick={handlePayment}>
+                    Desbloquear Consulta Completa – R$ 120,00
+                  </Button>
+                </>
+              ) : (
+                <Button className="w-full">Gerar Mapa</Button>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Gematria */}
+          <Card className="bg-white/10 border-white/20 backdrop-blur-md">
+            <CardContent className="space-y-4 p-6">
+              <h2 className="text-2xl font-semibold">Gematria</h2>
+              <Input
+                placeholder="Digite um nome ou palavra"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <Button className="w-full" onClick={handleGematria}>Calcular</Button>
+              {gematriaResult !== null && (
+                !paid ? (
+                  <div className="mt-4 text-yellow-300">
+                    <p className="text-lg">Valor da gematria: {gematriaResult}</p>
+                    <p className="text-md italic mt-2">
+                      Significado espiritual disponível após pagamento.
+                    </p>
+                    <Button className="mt-4 bg-yellow-500 hover:bg-yellow-600" onClick={handlePayment}>
+                      Desbloquear Consulta Completa – R$ 120,00
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="mt-4">
+                    <p className="text-lg">Valor da gematria: {gematriaResult}</p>
+                    <p className="text-md italic mt-2">Significado espiritual: {gematriaMeaning}</p>
+                  </div>
+                )
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}
